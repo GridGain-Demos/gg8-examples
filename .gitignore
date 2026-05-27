@@ -1,0 +1,33 @@
+# Maven
+target/
+pom-installed.xml
+.mvn/
+mvnw
+mvnw.cmd
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+/out/
+
+# Eclipse
+.settings/
+.classpath
+.project
+
+# VS Code
+.vscode/
+
+# NetBeans
+nbproject/
+nb-configuration.xml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs / runtime work dirs
+*.log
+/work/
