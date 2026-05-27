@@ -10,7 +10,8 @@ import the provided `pom.xml` file into your favourite IDE. The examples build
 against published GridGain artifacts — this repository contains examples only,
 no engine code.
 
-Requirements: JDK 11+ and Maven 3.6+.
+Requirements: JDK 8+ and Maven 3.6+. The examples compile to Java 8 bytecode
+(`maven.compiler.source/target = 1.8`), matching the GridGain 8 CE floor.
 
 To build:
 
