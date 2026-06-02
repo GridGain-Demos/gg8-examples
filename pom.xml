@@ -212,6 +212,15 @@
                             <include>**/*Suite.java</include>
                         </includes>
                         <argLine>${surefire.jvm.args}</argLine>
+                        <systemPropertyVariables>
+                            <!--
+                                Ignite resolves example config paths like
+                                'examples/config/example-ignite.xml' relative to IGNITE_HOME.
+                                Point it at the repo root so both examples/ and examples-ml/
+                                config paths resolve.
+                            -->
+                            <IGNITE_HOME>${project.basedir}/..</IGNITE_HOME>
+                        </systemPropertyVariables>
                     </configuration>
                 </plugin>
             </plugins>
