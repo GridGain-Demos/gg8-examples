@@ -36,6 +36,11 @@ jobs:
           key: m2-${{ runner.os }}-${{ github.run_id }}
           restore-keys: m2-${{ runner.os }}-
 
+      - name: Install native build tools required by CE (cmake for ignite-numa-allocator)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends cmake
+
       - name: Install CE artifacts (full build, skip tests)
         working-directory: gridgain
         run: mvn -B -ntp -DskipTests -Pall-java install
