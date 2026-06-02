@@ -5,19 +5,41 @@
 This project contains code examples for GridGain 8 Community Edition (built on
 Apache® Ignite™).
 
-Examples are shipped as a Maven project, so to start running you simply need to
-import the provided `pom.xml` file into your favourite IDE. The examples build
-against published GridGain artifacts — this repository contains examples only,
-no engine code.
+Examples are shipped as a Maven project. They build against a locally
+installed GridGain 8 CE checkout — this repository contains examples only,
+no engine code, and **no GridGain version is pinned**.
 
 Requirements: JDK 8+ and Maven 3.6+. The examples compile to Java 8 bytecode
 (`maven.compiler.source/target = 1.8`), matching the GridGain 8 CE floor.
 
-To build:
+## Building
 
-```shell
-mvn clean package
-```
+This project is **not** a standalone build. It requires the GridGain 8 CE
+sources alongside it, installed into your local Maven repository.
+
+1. Clone GridGain 8 CE next to this checkout (default path: `../gridgain`):
+
+   ```shell
+   git clone https://github.com/gridgain/gridgain.git ../gridgain
+   ```
+
+2. Install CE artifacts into your local Maven repository (slow the first
+   time — it builds the engine):
+
+   ```shell
+   ( cd ../gridgain && mvn -DskipTests install )
+   ```
+
+3. Build the examples via the helper script — it reads the CE version from
+   the sibling pom and invokes Maven for you:
+
+   ```shell
+   bin/build.sh clean package
+   ```
+
+   Pass `CE_DIR=/path/to/gridgain` if your CE checkout isn't at `../gridgain`.
+   To skip the helper and drive Maven yourself, export
+   `IGNITE_VERSION=<your-CE-version>` first.
 
 The project is split into two modules:
 
@@ -81,11 +103,12 @@ multi-node behaviour expect one or more remote nodes started with the shared
 configuration `examples/config/example-ignite.xml` (which enables peer-class-loading).
 To start such a node from your IDE, run the `ExampleNodeStartup` class.
 
-To run the example self-tests:
+To run the example self-tests (assumes you've completed the Building steps
+above so the CE artifacts are in your local Maven repository):
 
 ```shell
-mvn test -Dtest=IgniteExamplesSelfTestSuite     # core examples
-mvn test -Dtest=IgniteExamplesMLTestSuite        # machine-learning examples
+bin/build.sh test -Dtest=IgniteExamplesSelfTestSuite     # core examples
+bin/build.sh test -Dtest=IgniteExamplesMLTestSuite        # machine-learning examples
 ```
 
 ## Learn more
