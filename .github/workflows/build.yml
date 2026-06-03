@@ -81,24 +81,19 @@ jobs:
           restore-keys: m2-${{ runner.os }}-
 
       - name: Build and run self-tests
-        run: mvn -B -ntp clean test -Dmaven.test.failure.ignore=true
+        # -fae: keep going through the reactor when a module fails so we get
+        # surefire reports from every module, then surface failures at the end.
+        run: mvn -B -ntp -fae clean test
 
-      - name: Surefire summary
-        if: always()
+      - name: Print failing surefire reports
+        if: failure()
         run: |
-          set +e
-          fail=0
-          # Surefire .txt reports have the "Tests run:" line at line 4 (after
-          # a dashes / "Test set: ..." / dashes header). Match anywhere in
-          # the file so a non-zero failure/error count never slips by.
           for f in $(find . -path '*/surefire-reports/*.txt' -size +0c); do
             grep -qE 'Failures: [1-9]|Errors: [1-9]' "$f" || continue
             echo "::group::$f"
             cat "$f"
             echo "::endgroup::"
-            fail=1
           done
-          exit $fail
 
       - name: Upload surefire reports
         if: always()
