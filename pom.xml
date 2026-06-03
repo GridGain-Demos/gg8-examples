@@ -216,10 +216,10 @@
                             <!--
                                 Ignite resolves example config paths like
                                 'examples/config/example-ignite.xml' relative to IGNITE_HOME.
-                                Point it at the repo root so both examples/ and examples-ml/
-                                config paths resolve.
+                                Point it at the reactor root (canonical absolute path, no '..',
+                                so H2 csvread and similar consumers receive a clean path).
                             -->
-                            <IGNITE_HOME>${project.basedir}/..</IGNITE_HOME>
+                            <IGNITE_HOME>${maven.multiModuleProjectDirectory}</IGNITE_HOME>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
