@@ -9,8 +9,7 @@ Examples are shipped as a Maven project. They build against a locally
 installed GridGain 8 CE checkout — this repository contains examples only,
 no engine code, and **no GridGain version is pinned**.
 
-Requirements: JDK 8+ and Maven 3.6+. The examples compile to Java 8 bytecode
-(`maven.compiler.source/target = 1.8`), matching the GridGain 8 CE floor.
+Requirements: JDK 17 and Maven 3.6+ (this is what CI verifies).
 
 ## Building
 
@@ -31,15 +30,18 @@ sources alongside it, installed into your local Maven repository.
    ```
 
 3. Build the examples via the helper script — it reads the CE version from
-   the sibling pom and invokes Maven for you:
+   the sibling pom and forwards it to Maven as `-Drevision=<CE-version>`,
+   which is what the examples pom binds dependencies against:
 
    ```shell
    bin/build.sh clean package
    ```
 
    Pass `CE_DIR=/path/to/gridgain` if your CE checkout isn't at `../gridgain`.
-   To skip the helper and drive Maven yourself, export
-   `IGNITE_VERSION=<your-CE-version>` first.
+   If you'd rather invoke Maven yourself, pass `-Drevision=<CE-version>`
+   directly — `mvn` without `-Drevision` resolves dependencies against a
+   sentinel coordinate and fails with a clear "could not find artifact"
+   message.
 
 The project is split into two modules:
 

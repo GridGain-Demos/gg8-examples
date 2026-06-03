@@ -97,12 +97,6 @@
             <groupId>org.gridgain</groupId>
             <artifactId>ignite-tools</artifactId>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.rat</groupId>
-                    <artifactId>apache-rat-core</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>

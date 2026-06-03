@@ -36,16 +36,18 @@
             sources alongside it (default: a sibling clone at ../gridgain),
             installed into the local Maven repository via `mvn install -DskipTests`.
 
-            The examples' own version tracks CE's version: ${revision} resolves
-            from the IGNITE_VERSION environment variable, which must match the
-            version produced by that CE install. The bundled helper script (see
-            bin/build.sh) reads CE's pom.xml and sets it automatically; pass it
-            manually with -Drevision=... otherwise.
+            The examples' own version tracks CE's version: the value of
+            ${revision} below is a placeholder you MUST override at invocation
+            time. Use bin/build.sh — it reads CE's pom and forwards
+            `-Drevision=<CE-version>` for you — or pass `-Drevision=...`
+            yourself. Running `mvn` with neither produces dependency-not-found
+            errors against the sentinel coordinates below, which is the
+            intended actionable failure.
 
             No artifacts are pulled from any public GridGain Maven repository:
             everything comes from your locally-installed CE build.
         -->
-        <revision>${env.IGNITE_VERSION}</revision>
+        <revision>0.0.0-PASS-Drevision-OR-USE-bin-build-sh</revision>
 
         <!-- Third-party versions mirroring the upstream CE parent. -->
         <javax.cache.version>1.0.0</javax.cache.version>
