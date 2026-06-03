@@ -88,8 +88,11 @@ jobs:
         run: |
           set +e
           fail=0
+          # Surefire .txt reports have the "Tests run:" line at line 4 (after
+          # a dashes / "Test set: ..." / dashes header). Match anywhere in
+          # the file so a non-zero failure/error count never slips by.
           for f in $(find . -path '*/surefire-reports/*.txt' -size +0c); do
-            head -3 "$f" | grep -qE 'Failures: [^0]|Errors: [^0]|Skipped: [^0]' || continue
+            grep -qE 'Failures: [1-9]|Errors: [1-9]' "$f" || continue
             echo "::group::$f"
             cat "$f"
             echo "::endgroup::"
