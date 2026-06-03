@@ -105,7 +105,7 @@ public class MovieLensSQLExample {
                 }
             }
             finally {
-                cache.query(new SqlFieldsQuery("DROP TABLE ratings"));
+                cache.query(new SqlFieldsQuery("DROP TABLE IF EXISTS ratings"));
                 cache.destroy();
             }
         }
