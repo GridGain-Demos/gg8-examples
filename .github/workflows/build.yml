@@ -81,4 +81,27 @@ jobs:
           restore-keys: m2-${{ runner.os }}-
 
       - name: Build and run self-tests
-        run: mvn -B -ntp clean test
+        run: mvn -B -ntp clean test -Dmaven.test.failure.ignore=true
+
+      - name: Surefire summary
+        if: always()
+        run: |
+          set +e
+          fail=0
+          for f in $(find . -path '*/surefire-reports/*.txt' -size +0c); do
+            head -3 "$f" | grep -qE 'Failures: [^0]|Errors: [^0]|Skipped: [^0]' || continue
+            echo "::group::$f"
+            cat "$f"
+            echo "::endgroup::"
+            fail=1
+          done
+          exit $fail
+
+      - name: Upload surefire reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: '**/target/surefire-reports/**'
+          if-no-files-found: ignore
+          retention-days: 7
