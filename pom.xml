@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+ Copyright 2026 GridGain Systems, Inc. and Contributors.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -227,6 +243,60 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <!--
+                Apache RAT enforces the Apache 2.0 header on every source file
+                in the reactor. Bound to the validate phase so any plain
+                `mvn ...` invocation gates on it; CI runs it explicitly via
+                `mvn apache-rat:check` for a focused, fast signal.
+
+                The defaults already include the Apache 2.0 license matcher,
+                so our standard header passes out of the box. Excludes below
+                cover repo-level chrome and binary/data files that aren't
+                eligible for a comment header.
+            -->
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <version>0.16.1</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <consoleOutput>true</consoleOutput>
+                    <excludes>
+                        <!-- Repo chrome -->
+                        <exclude>.gitignore</exclude>
+                        <exclude>LICENSE</exclude>
+                        <exclude>**/README.md</exclude>
+                        <exclude>**/README.txt</exclude>
+
+                        <!-- Build output / IDE noise -->
+                        <exclude>**/target/**</exclude>
+                        <exclude>**/*.iml</exclude>
+
+                        <!-- ML datasets and pre-trained models, by design -->
+                        <exclude>**/resources/datasets/**</exclude>
+                        <exclude>**/resources/models/**</exclude>
+
+                        <!-- Data files used by the SQL / streaming examples -->
+                        <exclude>**/*.csv</exclude>
+                        <exclude>**/*.json</exclude>
+                        <exclude>**/*.sql</exclude>
+                        <exclude>**/wordcount/*.txt</exclude>
+
+                        <!-- Binary keystore shipped with the encryption example -->
+                        <exclude>**/*.jks</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
     <profiles>
