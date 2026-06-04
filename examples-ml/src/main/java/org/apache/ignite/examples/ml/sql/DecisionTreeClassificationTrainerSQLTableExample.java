@@ -137,8 +137,8 @@ public class DecisionTreeClassificationTrainerSQLTableExample {
 
                 System.out.println(">>> Example completed.");
             } finally {
-                cache.query(new SqlFieldsQuery("DROP TABLE titanik_train"));
-                cache.query(new SqlFieldsQuery("DROP TABLE titanik_test"));
+                cache.query(new SqlFieldsQuery("DROP TABLE IF EXISTS titanik_train"));
+                cache.query(new SqlFieldsQuery("DROP TABLE IF EXISTS titanik_test"));
                 cache.destroy();
             }
         } finally {

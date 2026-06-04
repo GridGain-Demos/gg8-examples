@@ -10,25 +10,109 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: JDK ${{ matrix.java }}
+  install-ce:
+    name: Install GridGain CE
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [ '8', '11', '17' ]
-
+    outputs:
+      ignite-version: ${{ steps.ce-version.outputs.value }}
+      ce-sha: ${{ steps.ce-sha.outputs.value }}
     steps:
-      - name: Checkout
+      - name: Checkout GridGain CE
         uses: actions/checkout@v4
+        with:
+          repository: gridgain/gridgain
+          path: gridgain
+          fetch-depth: 1
 
-      - name: Set up JDK ${{ matrix.java }}
+      - name: Resolve CE SHA
+        id: ce-sha
+        working-directory: gridgain
+        run: echo "value=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up JDK 11
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: ${{ matrix.java }}
-          cache: maven
+          java-version: '11'
+
+      - name: Cache local Maven repository
+        # Key by CE HEAD SHA so runs against the same CE commit share the cache
+        # instead of re-uploading ~1.5 GB of artifacts every run.
+        id: m2-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: m2-${{ runner.os }}-ce-${{ steps.ce-sha.outputs.value }}
+          restore-keys: m2-${{ runner.os }}-ce-
+
+      - name: Install native build tools required by CE
+        if: steps.m2-cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update -qq
+          # cmake — invoked by cmake-maven-plugin in ignite-numa-allocator
+          # libnuma-dev — provides libnuma.so + headers for ignite-numa-allocator
+          # build-essential is preinstalled on ubuntu-latest runners
+          sudo apt-get install -y --no-install-recommends cmake libnuma-dev
+
+      - name: Install CE artifacts (full build, skip tests)
+        if: steps.m2-cache.outputs.cache-hit != 'true'
+        working-directory: gridgain
+        run: mvn -B -ntp -DskipTests -Pall-java install
+
+      - name: Resolve CE version
+        id: ce-version
+        working-directory: gridgain
+        run: |
+          v=$(mvn -B -q help:evaluate -Dexpression=project.version -DforceStdout)
+          echo "value=$v" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: gg8-examples
+    needs: install-ce
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout gg8-examples
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Restore local Maven repository (CE artifacts from install-ce)
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: m2-${{ runner.os }}-ce-${{ needs.install-ce.outputs.ce-sha }}
+          restore-keys: m2-${{ runner.os }}-ce-
 
       - name: Build and run self-tests
-        run: mvn -B -ntp clean test
+        # -fae: keep going through the reactor when a module fails so we get
+        # surefire reports from every module, then surface failures at the end.
+        # -Drevision: tells the examples pom which CE version to bind to;
+        # matches what install-ce installed into the cached m2.
+        run: |
+          mvn -B -ntp -fae \
+              -Drevision='${{ needs.install-ce.outputs.ignite-version }}' \
+              clean test
+
+      - name: Print failing surefire reports
+        if: failure()
+        run: |
+          for f in $(find . -path '*/surefire-reports/*.txt' -size +0c); do
+            grep -qE 'Failures: [1-9]|Errors: [1-9]' "$f" || continue
+            echo "::group::$f"
+            cat "$f"
+            echo "::endgroup::"
+          done
+
+      - name: Upload surefire reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: '**/target/surefire-reports/**'
+          if-no-files-found: ignore
+          retention-days: 7

@@ -24,6 +24,7 @@ import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javassist.CannotCompileException;
@@ -88,6 +89,9 @@ public class IgniteExamplesMLTestSuite {
     public static Ignite getTestIgnite(String someString) {
         if (igniteProxy == null) {
             localIgnite = Ignition.start("examples-ml/config/example-ignite-ml.xml");
+
+            enableAllSqlFunctions();
+
             InvocationHandler handler = new InvocationHandler() {
                 @Override public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                     if (method.getName().equals("close"))
@@ -245,6 +249,23 @@ public class IgniteExamplesMLTestSuite {
         }
         catch (NotFoundException | CannotCompileException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Re-enables the SQL functions that CE disables by default (CSVREAD, FILE_READ, …)
+     * so the SQL examples that load CSVs via H2's csvread can run under the test suite.
+     * Mirrors the reflection trick used by CacheSpringStoreSessionListenerSelfTest in CE.
+     */
+    private static void enableAllSqlFunctions() {
+        try {
+            Class<?> mgr = Class.forName("org.apache.ignite.internal.processors.query.h2.FunctionsManager");
+            Method m = mgr.getDeclaredMethod("removeFunctions", java.util.Set.class);
+            m.setAccessible(true);
+            m.invoke(null, Collections.emptySet());
+        }
+        catch (ReflectiveOperationException e) {
+            throw new RuntimeException("Failed to re-enable SQL functions for examples-ml tests", e);
         }
     }
 

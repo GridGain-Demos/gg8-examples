@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-    Placeholder POM.
-
-    The real standalone multi-module build (parent + examples + examples-ml,
-    depending on published GridGain artifacts) is established in a later step.
-    Do not depend on the shape of this file.
--->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -14,15 +7,293 @@
 
     <groupId>org.gridgain</groupId>
     <artifactId>gg8-examples-parent</artifactId>
-    <version>8.10.0</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <name>GridGain 8 CE Examples</name>
-    <description>Example applications for GridGain 8 Community Edition. Placeholder POM.</description>
+    <description>Example applications for GridGain 8 Community Edition.</description>
+    <url>https://github.com/GridGain-Demos/gg8-examples</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <modules>
+        <module>examples</module>
+        <module>examples-ml</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!--
+            This project is NOT a standalone build. It requires the GridGain CE
+            sources alongside it (default: a sibling clone at ../gridgain),
+            installed into the local Maven repository via `mvn install -DskipTests`.
+
+            The examples' own version tracks CE's version: the value of
+            ${revision} below is a placeholder you MUST override at invocation
+            time. Use bin/build.sh — it reads CE's pom and forwards
+            `-Drevision=<CE-version>` for you — or pass `-Drevision=...`
+            yourself. Running `mvn` with neither produces dependency-not-found
+            errors against the sentinel coordinates below, which is the
+            intended actionable failure.
+
+            No artifacts are pulled from any public GridGain Maven repository:
+            everything comes from your locally-installed CE build.
+        -->
+        <revision>0.0.0-PASS-Drevision-OR-USE-bin-build-sh</revision>
+
+        <!-- Third-party versions mirroring the upstream CE parent. -->
+        <javax.cache.version>1.0.0</javax.cache.version>
+        <javassist.version>3.21.0-GA</javassist.version>
+
+        <!-- Plugin versions. -->
+        <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
+
+        <!-- Don't deploy examples as Maven artifacts. -->
+        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- GridGain engine -->
+            <dependency>
+                <groupId>org.gridgain</groupId>
+                <artifactId>ignite-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gridgain</groupId>
+                <artifactId>ignite-spring</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gridgain</groupId>
+                <artifactId>ignite-log4j</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gridgain</groupId>
+                <artifactId>ignite-log4j2</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gridgain</groupId>
+                <artifactId>ignite-indexing</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gridgain</groupId>
+                <artifactId>ignite-spring-data_2.2</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gridgain</groupId>
+                <artifactId>ignite-schedule</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gridgain</groupId>
+                <artifactId>ignite-geospatial</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gridgain</groupId>
+                <artifactId>ignite-hibernate_5.1</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gridgain</groupId>
+                <artifactId>ignite-ml</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gridgain</groupId>
+                <artifactId>ignite-ml-xgboost-model-parser</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gridgain</groupId>
+                <artifactId>ignite-ml-spark-model-parser</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gridgain</groupId>
+                <artifactId>ignite-ml-mleap-model-parser</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!-- GridGain test artifacts -->
+            <dependency>
+                <groupId>org.gridgain</groupId>
+                <artifactId>ignite-core</artifactId>
+                <version>${revision}</version>
+                <type>test-jar</type>
+            </dependency>
+            <dependency>
+                <groupId>org.gridgain</groupId>
+                <artifactId>ignite-tools</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!-- Third-party -->
+            <dependency>
+                <groupId>javax.cache</groupId>
+                <artifactId>cache-api</artifactId>
+                <version>${javax.cache.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-cli</groupId>
+                <artifactId>commons-cli</artifactId>
+                <version>1.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.simple-spring-memcached</groupId>
+                <artifactId>spymemcached</artifactId>
+                <version>2.8.4</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>2.3.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-impl</artifactId>
+                <version>2.3.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-core</artifactId>
+                <version>2.3.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jpmml</groupId>
+                <artifactId>pmml-model</artifactId>
+                <version>1.4.7</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.parquet</groupId>
+                <artifactId>parquet-hadoop</artifactId>
+                <version>1.10.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-common</artifactId>
+                <version>2.9.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.javassist</groupId>
+                <artifactId>javassist</artifactId>
+                <version>${javassist.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>1.2.17</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven.surefire.plugin.version}</version>
+                    <configuration>
+                        <!-- Only run the test suites; individual *SelfTest classes are aggregated by them. -->
+                        <includes>
+                            <include>**/*Suite.java</include>
+                        </includes>
+                        <argLine>${surefire.jvm.args}</argLine>
+                        <systemPropertyVariables>
+                            <!--
+                                Ignite resolves example config paths like
+                                'examples/config/example-ignite.xml' relative to IGNITE_HOME.
+                                Point it at the reactor root (canonical absolute path, no '..',
+                                so H2 csvread and similar consumers receive a clean path).
+                            -->
+                            <IGNITE_HOME>${maven.multiModuleProjectDirectory}</IGNITE_HOME>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <!--
+            JDK-specific runtime setup for the CE test framework.
+            Mirrors the per-JDK flags from CE's TeamCity "Setup JDK dependant params" step.
+        -->
+        <profile>
+            <id>jdk-8</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <properties>
+                <surefire.jvm.args></surefire.jvm.args>
+            </properties>
+            <dependencies>
+                <!-- tools.jar provides sun.jvmstat.* used by CE's GridAbstractTest. -->
+                <dependency>
+                    <groupId>com.sun</groupId>
+                    <artifactId>tools</artifactId>
+                    <version>1.8</version>
+                    <scope>system</scope>
+                    <systemPath>${java.home}/../lib/tools.jar</systemPath>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>jdk-11-plus</id>
+            <activation>
+                <jdk>[11,)</jdk>
+            </activation>
+            <properties>
+                <surefire.jvm.args>
+                    --add-opens=java.base/java.io=ALL-UNNAMED
+                    --add-opens=java.base/java.lang.invoke=ALL-UNNAMED
+                    --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+                    --add-opens=java.base/java.lang=ALL-UNNAMED
+                    --add-opens=java.base/java.math=ALL-UNNAMED
+                    --add-opens=java.base/java.net=ALL-UNNAMED
+                    --add-opens=java.base/java.nio=ALL-UNNAMED
+                    --add-opens=java.base/java.security.cert=ALL-UNNAMED
+                    --add-opens=java.base/java.text=ALL-UNNAMED
+                    --add-opens=java.base/java.time=ALL-UNNAMED
+                    --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED
+                    --add-opens=java.base/java.util.concurrent.locks=ALL-UNNAMED
+                    --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
+                    --add-opens=java.base/java.util=ALL-UNNAMED
+                    --add-opens=java.base/jdk.internal.access=ALL-UNNAMED
+                    --add-opens=java.base/jdk.internal.loader=ALL-UNNAMED
+                    --add-opens=java.base/jdk.internal.misc=ALL-UNNAMED
+                    --add-opens=java.base/jdk.internal.ref=ALL-UNNAMED
+                    --add-opens=java.base/sun.net.util=ALL-UNNAMED
+                    --add-opens=java.base/sun.nio.ch=ALL-UNNAMED
+                    --add-opens=java.base/sun.reflect.generics.reflectiveObjects=ALL-UNNAMED
+                    --add-opens=java.base/sun.security.util=ALL-UNNAMED
+                    --add-opens=java.base/sun.security.ssl=ALL-UNNAMED
+                    --add-opens=java.base/sun.security.x509=ALL-UNNAMED
+                    --add-opens=java.base/sun.util.calendar=ALL-UNNAMED
+                    --add-opens=java.desktop/java.awt.font=ALL-UNNAMED
+                    --add-opens=java.management/com.sun.jmx.mbeanserver=ALL-UNNAMED
+                    --add-opens=java.management/sun.management=ALL-UNNAMED
+                    --add-opens=java.sql/java.sql=ALL-UNNAMED
+                    --add-opens=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED
+                    --add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED
+                </surefire.jvm.args>
+            </properties>
+        </profile>
+    </profiles>
 </project>
