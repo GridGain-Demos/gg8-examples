@@ -121,11 +121,6 @@
             </dependency>
             <dependency>
                 <groupId>org.gridgain</groupId>
-                <artifactId>ignite-hibernate_5.1</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.gridgain</groupId>
                 <artifactId>ignite-ml</artifactId>
                 <version>${revision}</version>
             </dependency>
