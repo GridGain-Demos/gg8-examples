@@ -71,6 +71,7 @@
 
         <!-- Plugin versions. -->
         <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
+        <maven.flatten.plugin.version>1.2.7</maven.flatten.plugin.version>
 
         <!-- Don't deploy examples as Maven artifacts. -->
         <maven.deploy.skip>true</maven.deploy.skip>
@@ -275,6 +276,7 @@
                         <!-- Build output / IDE noise -->
                         <exclude>**/target/**</exclude>
                         <exclude>**/*.iml</exclude>
+                        <exclude>**/pom-installed.xml</exclude>
 
                         <!-- ML datasets and pre-trained models, by design -->
                         <exclude>**/resources/datasets/**</exclude>
@@ -290,6 +292,33 @@
                         <exclude>**/*.jks</exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${maven.flatten.plugin.version}</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                    <flattenedPomFilename>pom-installed.xml</flattenedPomFilename>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
