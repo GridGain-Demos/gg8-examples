@@ -11,6 +11,11 @@ no engine code, and **no GridGain version is pinned**.
 
 Requirements: JDK 17 and Maven 3.6+ (this is what CI verifies).
 
+CI runs on GridGain's internal TeamCity, not GitHub Actions — see the
+`GridGain8_Test_CommunityEdition_Examples` and
+`GridGain8_Test_CommunityEdition_ExamplesLGPL` jobs for build status and
+artifacts.
+
 ## Building
 
 This project is **not** a standalone build. It requires the GridGain 8 CE
