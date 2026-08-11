@@ -20,5 +20,4 @@
  *
  * @deprecated Removed in 8.10.
  */
-@Deprecated
 package org.apache.ignite.examples.datagrid.hibernate;
