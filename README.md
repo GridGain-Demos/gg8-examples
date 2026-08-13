@@ -70,6 +70,8 @@ The following example categories are included under `examples`:
 * `sql` - SQL API: DDL, DML, queries, and JDBC.
 * `streaming` - data streaming.
 
+The Hibernate examples are deprecated — removed in 8.10.
+
 The following example categories are included under `examples-ml`:
 * `clustering` - clustering algorithms (e.g. K-Means).
 * `dataset` - the ML dataset API.
