@@ -43,8 +43,8 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!--
@@ -374,26 +374,6 @@
             JDK-specific runtime setup for the CE test framework.
             Mirrors the per-JDK flags from CE's TeamCity "Setup JDK dependant params" step.
         -->
-        <profile>
-            <id>jdk-8</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <properties>
-                <surefire.jvm.args></surefire.jvm.args>
-            </properties>
-            <dependencies>
-                <!-- tools.jar provides sun.jvmstat.* used by CE's GridAbstractTest. -->
-                <dependency>
-                    <groupId>com.sun</groupId>
-                    <artifactId>tools</artifactId>
-                    <version>1.8</version>
-                    <scope>system</scope>
-                    <systemPath>${java.home}/../lib/tools.jar</systemPath>
-                </dependency>
-            </dependencies>
-        </profile>
-
         <profile>
             <id>jdk-11-plus</id>
             <activation>
