@@ -43,8 +43,8 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!--
@@ -84,6 +84,40 @@
 
         <!-- Don't deploy examples as Maven artifacts. -->
         <maven.deploy.skip>true</maven.deploy.skip>
+
+        <surefire.jvm.args>
+            --add-opens=java.base/java.io=ALL-UNNAMED
+            --add-opens=java.base/java.lang.invoke=ALL-UNNAMED
+            --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+            --add-opens=java.base/java.lang=ALL-UNNAMED
+            --add-opens=java.base/java.math=ALL-UNNAMED
+            --add-opens=java.base/java.net=ALL-UNNAMED
+            --add-opens=java.base/java.nio=ALL-UNNAMED
+            --add-opens=java.base/java.security.cert=ALL-UNNAMED
+            --add-opens=java.base/java.text=ALL-UNNAMED
+            --add-opens=java.base/java.time=ALL-UNNAMED
+            --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED
+            --add-opens=java.base/java.util.concurrent.locks=ALL-UNNAMED
+            --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
+            --add-opens=java.base/java.util=ALL-UNNAMED
+            --add-opens=java.base/jdk.internal.access=ALL-UNNAMED
+            --add-opens=java.base/jdk.internal.loader=ALL-UNNAMED
+            --add-opens=java.base/jdk.internal.misc=ALL-UNNAMED
+            --add-opens=java.base/jdk.internal.ref=ALL-UNNAMED
+            --add-opens=java.base/sun.net.util=ALL-UNNAMED
+            --add-opens=java.base/sun.nio.ch=ALL-UNNAMED
+            --add-opens=java.base/sun.reflect.generics.reflectiveObjects=ALL-UNNAMED
+            --add-opens=java.base/sun.security.util=ALL-UNNAMED
+            --add-opens=java.base/sun.security.ssl=ALL-UNNAMED
+            --add-opens=java.base/sun.security.x509=ALL-UNNAMED
+            --add-opens=java.base/sun.util.calendar=ALL-UNNAMED
+            --add-opens=java.desktop/java.awt.font=ALL-UNNAMED
+            --add-opens=java.management/com.sun.jmx.mbeanserver=ALL-UNNAMED
+            --add-opens=java.management/sun.management=ALL-UNNAMED
+            --add-opens=java.sql/java.sql=ALL-UNNAMED
+            --add-opens=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED
+            --add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED
+        </surefire.jvm.args>
     </properties>
 
     <dependencyManagement>
@@ -369,71 +403,4 @@
         </plugins>
     </build>
 
-    <profiles>
-        <!--
-            JDK-specific runtime setup for the CE test framework.
-            Mirrors the per-JDK flags from CE's TeamCity "Setup JDK dependant params" step.
-        -->
-        <profile>
-            <id>jdk-8</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <properties>
-                <surefire.jvm.args></surefire.jvm.args>
-            </properties>
-            <dependencies>
-                <!-- tools.jar provides sun.jvmstat.* used by CE's GridAbstractTest. -->
-                <dependency>
-                    <groupId>com.sun</groupId>
-                    <artifactId>tools</artifactId>
-                    <version>1.8</version>
-                    <scope>system</scope>
-                    <systemPath>${java.home}/../lib/tools.jar</systemPath>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <profile>
-            <id>jdk-11-plus</id>
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <properties>
-                <surefire.jvm.args>
-                    --add-opens=java.base/java.io=ALL-UNNAMED
-                    --add-opens=java.base/java.lang.invoke=ALL-UNNAMED
-                    --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
-                    --add-opens=java.base/java.lang=ALL-UNNAMED
-                    --add-opens=java.base/java.math=ALL-UNNAMED
-                    --add-opens=java.base/java.net=ALL-UNNAMED
-                    --add-opens=java.base/java.nio=ALL-UNNAMED
-                    --add-opens=java.base/java.security.cert=ALL-UNNAMED
-                    --add-opens=java.base/java.text=ALL-UNNAMED
-                    --add-opens=java.base/java.time=ALL-UNNAMED
-                    --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED
-                    --add-opens=java.base/java.util.concurrent.locks=ALL-UNNAMED
-                    --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
-                    --add-opens=java.base/java.util=ALL-UNNAMED
-                    --add-opens=java.base/jdk.internal.access=ALL-UNNAMED
-                    --add-opens=java.base/jdk.internal.loader=ALL-UNNAMED
-                    --add-opens=java.base/jdk.internal.misc=ALL-UNNAMED
-                    --add-opens=java.base/jdk.internal.ref=ALL-UNNAMED
-                    --add-opens=java.base/sun.net.util=ALL-UNNAMED
-                    --add-opens=java.base/sun.nio.ch=ALL-UNNAMED
-                    --add-opens=java.base/sun.reflect.generics.reflectiveObjects=ALL-UNNAMED
-                    --add-opens=java.base/sun.security.util=ALL-UNNAMED
-                    --add-opens=java.base/sun.security.ssl=ALL-UNNAMED
-                    --add-opens=java.base/sun.security.x509=ALL-UNNAMED
-                    --add-opens=java.base/sun.util.calendar=ALL-UNNAMED
-                    --add-opens=java.desktop/java.awt.font=ALL-UNNAMED
-                    --add-opens=java.management/com.sun.jmx.mbeanserver=ALL-UNNAMED
-                    --add-opens=java.management/sun.management=ALL-UNNAMED
-                    --add-opens=java.sql/java.sql=ALL-UNNAMED
-                    --add-opens=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED
-                    --add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED
-                </surefire.jvm.args>
-            </properties>
-        </profile>
-    </profiles>
 </project>
