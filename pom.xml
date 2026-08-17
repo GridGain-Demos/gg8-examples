@@ -69,15 +69,6 @@
         <javax.cache.version>1.0.0</javax.cache.version>
         <javassist.version>3.21.0-GA</javassist.version>
 
-        <!--
-            CE's default Spring line (spring.version in the CE parent) is 5.3.39, but ignite-spring
-            targets Spring 7 (ignite.spring.version) and pulls it in transitively. The examples use
-            ignite-spring-data_2.2, which is Spring Data 2.2 and cannot run on Spring 7 — it
-            references ListenableFuture, removed in 7.0 — so pin the Spring stack here.
-            Keep this value in step with spring.version in the CE parent.
-        -->
-        <legacy.spring.version>5.3.39</legacy.spring.version>
-
         <!-- Plugin versions. -->
         <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
         <maven.flatten.plugin.version>1.2.7</maven.flatten.plugin.version>
@@ -122,43 +113,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- Spring, pinned to the legacy line (see legacy.spring.version above). -->
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-core</artifactId>
-                <version>${legacy.spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-beans</artifactId>
-                <version>${legacy.spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-                <version>${legacy.spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-aop</artifactId>
-                <version>${legacy.spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-expression</artifactId>
-                <version>${legacy.spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-tx</artifactId>
-                <version>${legacy.spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-jdbc</artifactId>
-                <version>${legacy.spring.version}</version>
-            </dependency>
-
             <!-- GridGain engine -->
             <dependency>
                 <groupId>org.gridgain</groupId>
