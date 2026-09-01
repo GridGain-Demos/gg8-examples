@@ -48,22 +48,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!--
-            This project is NOT a standalone build. It requires the GridGain CE
-            sources alongside it (default: a sibling clone at ../gridgain),
-            installed into the local Maven repository via `mvn install -DskipTests`.
+            Version of the GridGain CE engine the examples build against.
+            Pinned to a released 8.9.x so a bare checkout builds with a plain
+            `mvn package`, resolving engine artifacts from the GridGain
+            external repository declared below.
 
-            The examples' own version tracks CE's version: the value of
-            ${revision} below is a placeholder you MUST override at invocation
-            time. Use bin/build.sh — it reads CE's pom and forwards
-            `-Drevision=<CE-version>` for you — or pass `-Drevision=...`
-            yourself. Running `mvn` with neither produces dependency-not-found
-            errors against the sentinel coordinates below, which is the
-            intended actionable failure.
-
-            No artifacts are pulled from any public GridGain Maven repository:
-            everything comes from your locally-installed CE build.
+            Release packaging rewrites this to the version being released.
+            To build against a local CE source tree instead, run bin/build.sh
+            (it reads the sibling CE pom) or pass `-Drevision=<CE-version>`
+            yourself, after `mvn -DskipTests install` in that source tree.
         -->
-        <revision>0.0.0-PASS-Drevision-OR-USE-bin-build-sh</revision>
+        <revision>8.9.37</revision>
 
         <!-- Third-party versions mirroring the upstream CE parent. -->
         <javax.cache.version>1.0.0</javax.cache.version>
@@ -251,6 +246,14 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <repositories>
+        <!-- GridGain CE artifacts are not published to Maven Central. -->
+        <repository>
+            <id>GridGain External Repository</id>
+            <url>https://www.gridgainsystems.com/nexus/content/repositories/external</url>
+        </repository>
+    </repositories>
 
     <build>
         <pluginManagement>

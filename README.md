@@ -5,9 +5,10 @@
 This project contains code examples for GridGain 8 Community Edition (built on
 Apache® Ignite™).
 
-Examples are shipped as a Maven project. They build against a locally
-installed GridGain 8 CE checkout — this repository contains examples only,
-no engine code, and **no GridGain version is pinned**.
+Examples are shipped as a Maven project and build on their own: the GridGain
+engine version is pinned as the `revision` property in `pom.xml` and resolved
+from the GridGain external Maven repository. This repository contains examples
+only, no engine code.
 
 Requirements: JDK 17 and Maven 3.6+ (this is what CI verifies).
 
@@ -18,35 +19,34 @@ artifacts.
 
 ## Building
 
-This project is **not** a standalone build. It requires the GridGain 8 CE
-sources alongside it, installed into your local Maven repository.
+A bare clone builds with plain Maven:
 
-1. Clone GridGain 8 CE next to this checkout (default path: `../gridgain`):
+```shell
+mvn clean package
+```
 
-   ```shell
-   git clone https://github.com/gridgain/gridgain.git ../gridgain
-   ```
+### Against a local CE build
 
-2. Install CE artifacts into your local Maven repository (slow the first
+To build the examples against a GridGain 8 CE source tree you have locally,
+instead of the pinned release:
+
+1. Install the CE artifacts into your local Maven repository (slow the first
    time — it builds the engine):
 
    ```shell
    ( cd ../gridgain && mvn -DskipTests install )
    ```
 
-3. Build the examples via the helper script — it reads the CE version from
-   the sibling pom and forwards it to Maven as `-Drevision=<CE-version>`,
-   which is what the examples pom binds dependencies against:
+2. Build via the helper script — it reads the CE version from that source
+   tree's pom and forwards it to Maven as `-Drevision=<CE-version>`,
+   overriding the pin:
 
    ```shell
    bin/build.sh clean package
    ```
 
-   Pass `CE_DIR=/path/to/gridgain` if your CE checkout isn't at `../gridgain`.
-   If you'd rather invoke Maven yourself, pass `-Drevision=<CE-version>`
-   directly — `mvn` without `-Drevision` resolves dependencies against a
-   sentinel coordinate and fails with a clear "could not find artifact"
-   message.
+   The script looks for CE at `../gridgain`; pass `CE_DIR=/path/to/gridgain`
+   for another location, or pass `-Drevision=<CE-version>` to `mvn` yourself.
 
 The project is split into two modules:
 
@@ -110,13 +110,14 @@ multi-node behaviour expect one or more remote nodes started with the shared
 configuration `examples/config/example-ignite.xml` (which enables peer-class-loading).
 To start such a node from your IDE, run the `ExampleNodeStartup` class.
 
-To run the example self-tests (assumes you've completed the Building steps
-above so the CE artifacts are in your local Maven repository):
+To run the example self-tests:
 
 ```shell
-bin/build.sh test -Dtest=IgniteExamplesSelfTestSuite     # core examples
-bin/build.sh test -Dtest=IgniteExamplesMLTestSuite        # machine-learning examples
+mvn test -Dtest=IgniteExamplesSelfTestSuite     # core examples
+mvn test -Dtest=IgniteExamplesMLTestSuite       # machine-learning examples
 ```
+
+Substitute `bin/build.sh` for `mvn` to test against a local CE build.
 
 ## Learn more
 

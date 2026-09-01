@@ -14,14 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Helper to build gg8-examples against a sibling GridGain CE clone.
+# Helper to build gg8-examples against a local GridGain CE source tree.
 #
 # Reads the CE project version from $CE_DIR/pom.xml (default: ../gridgain)
 # and forwards `-Drevision=<that-version>` to Maven so the examples build
 # against the CE artifacts you've already installed.
 #
-# Prerequisite: the sibling CE clone must already be installed into your
-# local Maven repository. From the CE checkout:
+# Prerequisite: that CE source tree must already be installed into your
+# local Maven repository. From the CE directory:
 #
 #     mvn -DskipTests install
 #
@@ -36,7 +36,7 @@ PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 if [ ! -f "$CE_DIR/pom.xml" ]; then
     echo "error: CE pom.xml not found at $CE_DIR/pom.xml" >&2
-    echo "hint:  clone gridgain/gridgain alongside this repo, or set CE_DIR." >&2
+    echo "hint:  place the CE source tree at ../gridgain, or set CE_DIR." >&2
     exit 1
 fi
 
