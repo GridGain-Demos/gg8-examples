@@ -113,9 +113,12 @@ To start such a node from your IDE, run the `ExampleNodeStartup` class.
 To run the example self-tests:
 
 ```shell
-mvn test -Dtest=IgniteExamplesSelfTestSuite     # core examples
-mvn test -Dtest=IgniteExamplesMLTestSuite       # machine-learning examples
+mvn test -pl examples    -Dtest=IgniteExamplesSelfTestSuite   # core examples
+mvn test -pl examples-ml -Dtest=IgniteExamplesMLTestSuite     # machine-learning examples
 ```
+
+Each suite lives in one module only, so `-pl` is required — a reactor-wide
+`-Dtest=` fails in the module that does not hold the named suite.
 
 Substitute `bin/build.sh` for `mvn` to test against a local CE build.
 

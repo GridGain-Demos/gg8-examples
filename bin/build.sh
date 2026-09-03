@@ -45,5 +45,17 @@ ignite_version="$(mvn -B -q -f "$CE_DIR/pom.xml" \
 
 echo "==> CE version: $ignite_version" >&2
 
+# When the CE tree is on an already-released version, an absent local install
+# resolves the published jars from the GridGain repository instead — the build
+# goes green against the release engine rather than your local changes.
+local_repo="$(mvn -B -q help:evaluate -Dexpression=settings.localRepository -DforceStdout)"
+ignite_core_jar="$local_repo/org/gridgain/ignite-core/$ignite_version/ignite-core-$ignite_version.jar"
+
+if [ ! -f "$ignite_core_jar" ]; then
+    echo "error: org.gridgain:ignite-core:$ignite_version is not in your local Maven repository" >&2
+    echo "hint:  run 'mvn -DskipTests install' in $CE_DIR first." >&2
+    exit 1
+fi
+
 cd "$PROJECT_ROOT"
 exec mvn "-Drevision=$ignite_version" "$@"
