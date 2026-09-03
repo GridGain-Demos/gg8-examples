@@ -48,7 +48,13 @@ echo "==> CE version: $ignite_version" >&2
 # When the CE tree is on an already-released version, an absent local install
 # resolves the published jars from the GridGain repository instead — the build
 # goes green against the release engine rather than your local changes.
-local_repo="$(mvn -B -q help:evaluate -Dexpression=settings.localRepository -DforceStdout)"
+maven_repo_local_arg=""
+for arg in "$@"; do
+    case "$arg" in -Dmaven.repo.local=*) maven_repo_local_arg="$arg" ;; esac
+done
+
+local_repo="$(mvn -B -q help:evaluate -Dexpression=settings.localRepository -DforceStdout \
+    ${maven_repo_local_arg:+"$maven_repo_local_arg"})"
 ignite_core_jar="$local_repo/org/gridgain/ignite-core/$ignite_version/ignite-core-$ignite_version.jar"
 
 if [ ! -f "$ignite_core_jar" ]; then
