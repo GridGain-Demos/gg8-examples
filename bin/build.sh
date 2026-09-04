@@ -14,14 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Helper to build gg8-examples against a sibling GridGain CE clone.
+# Helper to build gg8-examples against a local GridGain CE source tree.
 #
 # Reads the CE project version from $CE_DIR/pom.xml (default: ../gridgain)
 # and forwards `-Drevision=<that-version>` to Maven so the examples build
 # against the CE artifacts you've already installed.
 #
-# Prerequisite: the sibling CE clone must already be installed into your
-# local Maven repository. From the CE checkout:
+# Prerequisite: that CE source tree must already be installed into your
+# local Maven repository. From the CE directory:
 #
 #     mvn -DskipTests install
 #
@@ -36,7 +36,7 @@ PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 if [ ! -f "$CE_DIR/pom.xml" ]; then
     echo "error: CE pom.xml not found at $CE_DIR/pom.xml" >&2
-    echo "hint:  clone gridgain/gridgain alongside this repo, or set CE_DIR." >&2
+    echo "hint:  place the CE source tree at ../gridgain, or set CE_DIR." >&2
     exit 1
 fi
 
@@ -44,6 +44,24 @@ ignite_version="$(mvn -B -q -f "$CE_DIR/pom.xml" \
     help:evaluate -Dexpression=project.version -DforceStdout)"
 
 echo "==> CE version: $ignite_version" >&2
+
+# When the CE tree is on an already-released version, an absent local install
+# resolves the published jars from the GridGain repository instead — the build
+# goes green against the release engine rather than your local changes.
+maven_repo_local_arg=""
+for arg in "$@"; do
+    case "$arg" in -Dmaven.repo.local=*) maven_repo_local_arg="$arg" ;; esac
+done
+
+local_repo="$(mvn -B -q help:evaluate -Dexpression=settings.localRepository -DforceStdout \
+    ${maven_repo_local_arg:+"$maven_repo_local_arg"})"
+ignite_core_jar="$local_repo/org/gridgain/ignite-core/$ignite_version/ignite-core-$ignite_version.jar"
+
+if [ ! -f "$ignite_core_jar" ]; then
+    echo "error: org.gridgain:ignite-core:$ignite_version is not in your local Maven repository" >&2
+    echo "hint:  run 'mvn -DskipTests install' in $CE_DIR first." >&2
+    exit 1
+fi
 
 cd "$PROJECT_ROOT"
 exec mvn "-Drevision=$ignite_version" "$@"
