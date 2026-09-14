@@ -36,6 +36,7 @@ import org.apache.ignite.examples.EventsExamplesMultiNodeSelfTest;
 import org.apache.ignite.examples.EventsExamplesSelfTest;
 import org.apache.ignite.examples.LifecycleExamplesSelfTest;
 import org.apache.ignite.examples.MemcacheRestExamplesMultiNodeSelfTest;
+import org.apache.ignite.examples.PairedBranchMarkerSelfTest;
 import org.apache.ignite.examples.MemcacheRestExamplesSelfTest;
 import org.apache.ignite.examples.MessagingExamplesSelfTest;
 import org.apache.ignite.examples.MonteCarloExamplesMultiNodeSelfTest;
@@ -55,6 +56,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+    PairedBranchMarkerSelfTest.class,
     CacheExamplesSelfTest.class,
     SqlExamplesSelfTest.class,
     BasicExamplesSelfTest.class,
