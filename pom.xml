@@ -39,7 +39,6 @@
 
     <modules>
         <module>examples</module>
-        <module>examples-ml</module>
     </modules>
 
     <properties>
@@ -147,26 +146,6 @@
             <dependency>
                 <groupId>org.gridgain</groupId>
                 <artifactId>ignite-geospatial</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.gridgain</groupId>
-                <artifactId>ignite-ml</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.gridgain</groupId>
-                <artifactId>ignite-ml-xgboost-model-parser</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.gridgain</groupId>
-                <artifactId>ignite-ml-spark-model-parser</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.gridgain</groupId>
-                <artifactId>ignite-ml-mleap-model-parser</artifactId>
                 <version>${revision}</version>
             </dependency>
 
