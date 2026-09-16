@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 GridGain Systems, Inc. and Contributors.
+ * Copyright 2026 GridGain Systems, Inc. and Contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.ignite.examples;
+package org.apache.ignite.examples.springdata;
 
-import org.apache.ignite.examples.springdata.SpringDataExample;
 import org.apache.ignite.testframework.junits.common.GridAbstractExamplesTest;
 import org.junit.Test;
 

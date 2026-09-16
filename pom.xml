@@ -42,6 +42,38 @@
         <module>examples-ml</module>
     </modules>
 
+    <!-- The Spring Data examples exist twice, once per engine line: 8.9 published
+         ignite-spring-data_2.2, 8.10 publishes ignite-spring-data, and the imports differ, so one
+         source set cannot compile against both. Both modules build the same artifactId, so exactly
+         one must be in the reactor. Activation is on the property alone rather than
+         activeByDefault, which Maven switches off as soon as any -P profile is named - and CI does
+         name one. -->
+    <profiles>
+        <profile>
+            <id>spring-data-4</id>
+            <activation>
+                <property>
+                    <name>spring.data.4</name>
+                </property>
+            </activation>
+            <modules>
+                <module>examples-spring-data</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>spring-data-2.2</id>
+            <activation>
+                <property>
+                    <name>!spring.data.4</name>
+                </property>
+            </activation>
+            <modules>
+                <module>examples-spring-data-2.2</module>
+            </modules>
+        </profile>
+    </profiles>
+
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -134,9 +166,17 @@
                 <artifactId>ignite-indexing</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <!-- Both Spring Data coordinates are managed here; only the one belonging to the
+                 active spring-data profile is ever depended on. 8.9 published _2.2, 8.10 publishes
+                 the unsuffixed name. -->
             <dependency>
                 <groupId>org.gridgain</groupId>
                 <artifactId>ignite-spring-data_2.2</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gridgain</groupId>
+                <artifactId>ignite-spring-data</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
