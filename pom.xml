@@ -61,7 +61,6 @@
 
         <!-- Third-party versions mirroring the upstream CE parent. -->
         <javax.cache.version>1.0.0</javax.cache.version>
-        <javassist.version>3.21.0-GA</javassist.version>
 
         <!-- Plugin versions. -->
         <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
@@ -116,11 +115,6 @@
             <dependency>
                 <groupId>org.gridgain</groupId>
                 <artifactId>ignite-spring</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.gridgain</groupId>
-                <artifactId>ignite-log4j</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -192,31 +186,6 @@
                 <groupId>com.sun.xml.bind</groupId>
                 <artifactId>jaxb-core</artifactId>
                 <version>2.3.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jpmml</groupId>
-                <artifactId>pmml-model</artifactId>
-                <version>1.4.7</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.parquet</groupId>
-                <artifactId>parquet-hadoop</artifactId>
-                <version>1.15.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.hadoop</groupId>
-                <artifactId>hadoop-common</artifactId>
-                <version>3.4.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.hadoop</groupId>
-                <artifactId>hadoop-mapreduce-client-core</artifactId>
-                <version>3.4.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.javassist</groupId>
-                <artifactId>javassist</artifactId>
-                <version>${javassist.version}</version>
             </dependency>
             <dependency>
                 <groupId>log4j</groupId>
@@ -298,10 +267,6 @@
                         <exclude>**/target/**</exclude>
                         <exclude>**/*.iml</exclude>
                         <exclude>**/pom-installed.xml</exclude>
-
-                        <!-- ML datasets and pre-trained models, by design -->
-                        <exclude>**/resources/datasets/**</exclude>
-                        <exclude>**/resources/models/**</exclude>
 
                         <!-- Data files used by the SQL / streaming examples -->
                         <exclude>**/*.csv</exclude>
