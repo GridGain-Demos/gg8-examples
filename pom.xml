@@ -40,47 +40,9 @@
     <modules>
         <module>examples</module>
         <module>examples-ml</module>
+        <module>examples-spring-data</module>
     </modules>
 
-    <!-- The Spring Data examples exist twice, once per engine line: 8.9 published
-         ignite-spring-data_2.2, 8.10 publishes ignite-spring-data, and the imports differ, so one
-         source set cannot compile against both.
-
-         SELECT WITH -Dspring.data.4, NEVER WITH -P. Both profiles build the same artifactId, so
-         exactly one may be in the reactor, and -P is additive: naming either id leaves the property
-         untouched, so `!spring.data.4` still matches and both enter the reactor - Maven then aborts
-         with "duplicated in the reactor". The ids are prefixed auto- to say they are not -P handles.
-         activeByDefault is avoided for the opposite reason: Maven drops it as soon as any -P is
-         named, and the Examples CI lane names one.
-
-         Both copies go when 8.9 reaches EOL: delete examples-spring-data-2.2, drop these profiles,
-         and make examples-spring-data an unconditional module. Until then the two source trees
-         differ only in six imports, and nothing detects drift between them - edit both. -->
-    <profiles>
-        <profile>
-            <id>auto-spring-data-4</id>
-            <activation>
-                <property>
-                    <name>spring.data.4</name>
-                </property>
-            </activation>
-            <modules>
-                <module>examples-spring-data</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>auto-spring-data-legacy</id>
-            <activation>
-                <property>
-                    <name>!spring.data.4</name>
-                </property>
-            </activation>
-            <modules>
-                <module>examples-spring-data-2.2</module>
-            </modules>
-        </profile>
-    </profiles>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

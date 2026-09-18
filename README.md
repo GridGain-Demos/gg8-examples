@@ -52,22 +52,22 @@ The project is split into three modules:
 
 - `examples` — Java examples for core GridGain / Ignite features.
 - `examples-ml` — machine-learning examples (`org.apache.ignite.examples.ml.*`).
-- `ignite-examples-spring-data` — Spring Data examples
-  (`org.apache.ignite.examples.springdata.*`).
+- `examples-spring-data` — Spring Data examples (`org.apache.ignite.examples.springdata.*`).
 
 ### Choosing the Spring Data line
 
-`ignite-examples-spring-data` is built from one of two directories, because 8.9 published the module
-as `ignite-spring-data_2.2` and 8.10 publishes it as `ignite-spring-data`, under different packages:
+8.9 published the engine module as `ignite-spring-data_2.2` and 8.10 publishes it as
+`ignite-spring-data`, under different packages. Only `PersonRepository` and `SpringAppCfg` differ, so
+they live in a per-line source root and the rest of the module is shared:
 
-| engine | directory | how to select |
+| engine | source root | how to select |
 | --- | --- | --- |
-| 8.9 (default) | `examples-spring-data-2.2` | nothing — this is the default |
-| 8.10+ | `examples-spring-data` | add `-Dspring.data.4` |
+| 8.9 (default) | `src/main/java-spring-data-2.2` | nothing — this is the default |
+| 8.10+ | `src/main/java-spring-data-4` | `-Dspring.data.4` (or `-P spring-data-4`) |
 
-Select with `-Dspring.data.4`, never with `-P`. The profile ids are not `-P` handles: `-P` does not
-suppress the other profile's property activation, so naming one puts both directories in the reactor
-under the same artifactId and Maven aborts with "duplicated in the reactor".
+The switch picks both the source root and the engine coordinate. Selecting 8.10 against an 8.9 engine
+fails on the coordinate that line never published, which is the honest error rather than a compile
+failure deeper in.
 
 The following example categories are included under `examples`:
 * `binary` - working with `BinaryObject`s and binary metadata.

@@ -27,12 +27,38 @@
         <version>${revision}</version>
     </parent>
 
-    <!-- Same artifactId as examples-spring-data-2.2, which carries the same examples against Spring Data 2.2.
-         The two are selected by mutually exclusive profiles in the parent, so only ever one is in
-         the reactor; sharing the coordinate keeps the CI -pl and -Dtest lists free of baseline
-         branching. -->
     <artifactId>ignite-examples-spring-data</artifactId>
-    <name>GridGain 8 CE Examples — Spring Data (Spring Data 4)</name>
+    <name>GridGain 8 CE Examples — Spring Data</name>
+
+    <!-- 8.9 published the engine module as ignite-spring-data_2.2, 8.10 publishes it as
+         ignite-spring-data, under different packages. Only the two repository/config classes differ,
+         so they live in a per-line source root and everything else is shared.
+
+         One module, one profile: 8.9 is the unprofiled default and -Dspring.data.4 switches both the
+         coordinate and the source root. A single profile is what makes this safe - with two
+         complementary profiles, -P activates one without defining the property the other negates,
+         so both matched and Maven aborted on the duplicate artifactId.
+
+         Drop the 2.2 source root and this profile at 8.9 EOL. -->
+    <properties>
+        <spring.data.artifact>ignite-spring-data_2.2</spring.data.artifact>
+        <spring.data.sources>src/main/java-spring-data-2.2</spring.data.sources>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>spring-data-4</id>
+            <activation>
+                <property>
+                    <name>spring.data.4</name>
+                </property>
+            </activation>
+            <properties>
+                <spring.data.artifact>ignite-spring-data</spring.data.artifact>
+                <spring.data.sources>src/main/java-spring-data-4</spring.data.sources>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -57,7 +83,7 @@
 
         <dependency>
             <groupId>org.gridgain</groupId>
-            <artifactId>ignite-spring-data</artifactId>
+            <artifactId>${spring.data.artifact}</artifactId>
         </dependency>
 
         <!-- ExampleNodeStartup and the shared model classes. -->
@@ -87,4 +113,30 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <sourceDirectory>${spring.data.sources}</sourceDirectory>
+
+        <plugins>
+            <!-- sourceDirectory is the per-line root, so the shared sources need adding back. -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
