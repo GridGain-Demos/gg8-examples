@@ -48,10 +48,26 @@ instead of the pinned release:
    The script looks for CE at `../gridgain`; pass `CE_DIR=/path/to/gridgain`
    for another location, or pass `-Drevision=<CE-version>` to `mvn` yourself.
 
-The project is split into two modules:
+The project is split into three modules:
 
 - `examples` — Java examples for core GridGain / Ignite features.
 - `examples-ml` — machine-learning examples (`org.apache.ignite.examples.ml.*`).
+- `ignite-examples-spring-data` — Spring Data examples
+  (`org.apache.ignite.examples.springdata.*`).
+
+### Choosing the Spring Data line
+
+`ignite-examples-spring-data` is built from one of two directories, because 8.9 published the module
+as `ignite-spring-data_2.2` and 8.10 publishes it as `ignite-spring-data`, under different packages:
+
+| engine | directory | how to select |
+| --- | --- | --- |
+| 8.9 (default) | `examples-spring-data-2.2` | nothing — this is the default |
+| 8.10+ | `examples-spring-data` | add `-Dspring.data.4` |
+
+Select with `-Dspring.data.4`, never with `-P`. The profile ids are not `-P` handles: `-P` does not
+suppress the other profile's property activation, so naming one puts both directories in the reactor
+under the same artifactId and Maven aborts with "duplicated in the reactor".
 
 The following example categories are included under `examples`:
 * `binary` - working with `BinaryObject`s and binary metadata.
@@ -115,6 +131,9 @@ To run the example self-tests:
 ```shell
 mvn test -pl examples    -Dtest=IgniteExamplesSelfTestSuite   # core examples
 mvn test -pl examples-ml -Dtest=IgniteExamplesMLTestSuite     # machine-learning examples
+
+# Spring Data examples: 8.9 by default, add -Dspring.data.4 for 8.10+
+mvn test -pl :ignite-examples-spring-data -Dtest=IgniteExamplesSpringDataTestSuite
 ```
 
 Each suite lives in one module only, so `-pl` is required — a reactor-wide
