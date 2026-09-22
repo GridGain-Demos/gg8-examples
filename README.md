@@ -48,10 +48,9 @@ instead of the pinned release:
    The script looks for CE at `../gridgain`; pass `CE_DIR=/path/to/gridgain`
    for another location, or pass `-Drevision=<CE-version>` to `mvn` yourself.
 
-The project is split into three modules:
+The project is split into two modules:
 
 - `examples` — Java examples for core GridGain / Ignite features.
-- `examples-ml` — machine-learning examples (`org.apache.ignite.examples.ml.*`).
 - `examples-spring-data` — Spring Data examples (`org.apache.ignite.examples.springdata.*`).
 
 ### Choosing the Spring Data line
@@ -86,27 +85,6 @@ The following example categories are included under `examples`:
 * `sql` - SQL API: DDL, DML, queries, and JDBC.
 * `streaming` - data streaming.
 
-The following example categories are included under `examples-ml`:
-* `clustering` - clustering algorithms (e.g. K-Means).
-* `dataset` - the ML dataset API.
-* `environment` - learning environment and parallelism.
-* `genetic` - genetic algorithms.
-* `inference` - model inference and serving.
-* `knn` - k-nearest-neighbors classification and regression.
-* `mleap` - importing MLeap models.
-* `multiclass` - multiclass classification.
-* `naivebayes` - Naive Bayes classifiers.
-* `nn` - neural networks (multilayer perceptron).
-* `preprocessing` - feature preprocessing.
-* `recommendation` - recommendation systems.
-* `regression` - linear and logistic regression.
-* `selection` - model selection and cross-validation.
-* `sql` - training ML models over SQL data.
-* `svm` - support vector machines.
-* `tree` - decision trees, random forest, gradient boosting.
-* `tutorial` - a step-by-step ML tutorial.
-* `xgboost` - importing XGBoost models.
-
 Supporting code (shared domain model, utilities) lives under `model` and `util`.
 
 The `examples` module also ships non-Java assets:
@@ -129,15 +107,11 @@ To start such a node from your IDE, run the `ExampleNodeStartup` class.
 To run the example self-tests:
 
 ```shell
-mvn test -pl examples    -Dtest=IgniteExamplesSelfTestSuite   # core examples
-mvn test -pl examples-ml -Dtest=IgniteExamplesMLTestSuite     # machine-learning examples
+mvn test -pl examples -Dtest=IgniteExamplesSelfTestSuite
 
 # Spring Data examples: 8.9 by default, add -Dspring.data.4 for 8.10+
 mvn test -pl :ignite-examples-spring-data -Dtest=IgniteExamplesSpringDataTestSuite
 ```
-
-Each suite lives in one module only, so `-pl` is required — a reactor-wide
-`-Dtest=` fails in the module that does not hold the named suite.
 
 Substitute `bin/build.sh` for `mvn` to test against a local CE build.
 
