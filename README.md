@@ -48,7 +48,25 @@ instead of the pinned release:
    The script looks for CE at `../gridgain`; pass `CE_DIR=/path/to/gridgain`
    for another location, or pass `-Drevision=<CE-version>` to `mvn` yourself.
 
-The `examples` module holds Java examples for core GridGain / Ignite features.
+The project is split into two modules:
+
+- `examples` — Java examples for core GridGain / Ignite features.
+- `examples-spring-data` — Spring Data examples (`org.apache.ignite.examples.springdata.*`).
+
+### Choosing the Spring Data line
+
+8.9 published the engine module as `ignite-spring-data_2.2` and 8.10 publishes it as
+`ignite-spring-data`, under different packages. Only `PersonRepository` and `SpringAppCfg` differ, so
+they live in a per-line source root and the rest of the module is shared:
+
+| engine | source root | how to select |
+| --- | --- | --- |
+| 8.9 (default) | `src/main/java-spring-data-2.2` | nothing — this is the default |
+| 8.10+ | `src/main/java-spring-data-4` | `-Dspring.data.4` (or `-P spring-data-4`) |
+
+The switch picks both the source root and the engine coordinate. Selecting 8.10 against an 8.9 engine
+fails on the coordinate that line never published, which is the honest error rather than a compile
+failure deeper in.
 
 The following example categories are included under `examples`:
 * `binary` - working with `BinaryObject`s and binary metadata.
@@ -89,7 +107,10 @@ To start such a node from your IDE, run the `ExampleNodeStartup` class.
 To run the example self-tests:
 
 ```shell
-mvn test -Dtest=IgniteExamplesSelfTestSuite
+mvn test -pl examples -Dtest=IgniteExamplesSelfTestSuite
+
+# Spring Data examples: 8.9 by default, add -Dspring.data.4 for 8.10+
+mvn test -pl :ignite-examples-spring-data -Dtest=IgniteExamplesSpringDataTestSuite
 ```
 
 Substitute `bin/build.sh` for `mvn` to test against a local CE build.

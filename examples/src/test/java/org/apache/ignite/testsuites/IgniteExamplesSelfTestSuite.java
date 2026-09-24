@@ -41,7 +41,6 @@ import org.apache.ignite.examples.MessagingExamplesSelfTest;
 import org.apache.ignite.examples.MonteCarloExamplesMultiNodeSelfTest;
 import org.apache.ignite.examples.MonteCarloExamplesSelfTest;
 import org.apache.ignite.examples.SpringBeanExamplesSelfTest;
-import org.apache.ignite.examples.SpringDataExampleSelfTest;
 import org.apache.ignite.examples.SqlExamplesSelfTest;
 import org.apache.ignite.examples.TaskExamplesMultiNodeSelfTest;
 import org.apache.ignite.examples.TaskExamplesSelfTest;
@@ -68,7 +67,6 @@ import org.junit.runners.Suite;
     MonteCarloExamplesSelfTest.class,
     TaskExamplesSelfTest.class,
     SpringBeanExamplesSelfTest.class,
-    SpringDataExampleSelfTest.class,
     CheckpointExamplesSelfTest.class,
     ClusterGroupExampleSelfTest.class,
     CacheContinuousQueryExamplesSelfTest.class,

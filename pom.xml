@@ -39,7 +39,9 @@
 
     <modules>
         <module>examples</module>
+        <module>examples-spring-data</module>
     </modules>
+
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -127,9 +129,17 @@
                 <artifactId>ignite-indexing</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <!-- Both Spring Data coordinates are managed here; only the one belonging to the
+                 active spring-data profile is ever depended on. 8.9 published _2.2, 8.10 publishes
+                 the unsuffixed name. -->
             <dependency>
                 <groupId>org.gridgain</groupId>
                 <artifactId>ignite-spring-data_2.2</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gridgain</groupId>
+                <artifactId>ignite-spring-data</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
