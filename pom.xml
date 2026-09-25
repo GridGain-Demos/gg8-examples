@@ -63,7 +63,7 @@
             No artifacts are pulled from any public GridGain Maven repository:
             everything comes from your locally-installed CE build.
         -->
-        <revision>0.0.0-PASS-Drevision-OR-USE-bin-build-sh</revision>
+        <revision>8.9.38</revision>
 
         <!-- Third-party versions mirroring the upstream CE parent. -->
         <javax.cache.version>1.0.0</javax.cache.version>
