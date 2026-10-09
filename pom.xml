@@ -67,6 +67,8 @@
         <!-- Plugin versions. -->
         <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
         <maven.flatten.plugin.version>1.2.7</maven.flatten.plugin.version>
+        <apache.rat.plugin.version>0.16.1</apache.rat.plugin.version>
+        <build.helper.maven.plugin.version>3.0.0</build.helper.maven.plugin.version>
 
         <!-- Don't deploy examples as Maven artifacts. -->
         <maven.deploy.skip>true</maven.deploy.skip>
@@ -237,6 +239,12 @@
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>${build.helper.maven.plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -255,7 +263,7 @@
             <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
-                <version>0.16.1</version>
+                <version>${apache.rat.plugin.version}</version>
                 <executions>
                     <execution>
                         <phase>validate</phase>
