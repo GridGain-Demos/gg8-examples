@@ -65,7 +65,7 @@
         <javax.cache.version>1.0.0</javax.cache.version>
 
         <!-- Plugin versions. -->
-        <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
+        <maven.surefire.plugin.version>3.5.6</maven.surefire.plugin.version>
         <maven.flatten.plugin.version>1.2.7</maven.flatten.plugin.version>
         <apache.rat.plugin.version>0.16.1</apache.rat.plugin.version>
         <build.helper.maven.plugin.version>3.0.0</build.helper.maven.plugin.version>
