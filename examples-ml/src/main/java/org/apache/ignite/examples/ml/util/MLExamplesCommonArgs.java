@@ -16,6 +16,8 @@
 
 package org.apache.ignite.examples.ml.util;
 
+import java.util.Arrays;
+
 /**
  * Some common arguments for examples in ML module.
  */
@@ -27,4 +29,12 @@ public class MLExamplesCommonArgs {
 
     /** Empty args for ML examples. */
     public static final String[] EMPTY_ARGS_ML = new String[] {"--" + UNATTENDED};
+
+    /**
+     * @param args Example arguments.
+     * @return {@code true} if the example runs unattended, as in the test suite.
+     */
+    public static boolean isUnattended(String[] args) {
+        return args != null && Arrays.asList(args).contains("--" + UNATTENDED);
+    }
 }

@@ -276,7 +276,8 @@
                         <includes>
                             <include>**/*Suite.java</include>
                         </includes>
-                        <argLine>${surefire.jvm.args}</argLine>
+                        <!-- The forked test JVM does not inherit MAVEN_OPTS. -->
+                        <argLine>-Xms2g -Xmx2g -Djava.awt.headless=true ${surefire.jvm.args}</argLine>
                         <systemPropertyVariables>
                             <!--
                                 Ignite resolves example config paths like
