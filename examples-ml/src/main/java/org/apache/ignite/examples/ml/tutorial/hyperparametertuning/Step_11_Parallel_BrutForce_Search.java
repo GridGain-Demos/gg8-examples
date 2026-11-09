@@ -22,6 +22,7 @@ import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
 import org.apache.ignite.Ignition;
 import org.apache.ignite.examples.ml.tutorial.TitanicUtils;
+import org.apache.ignite.examples.ml.util.MLExamplesCommonArgs;
 import org.apache.ignite.examples.ml.util.SerializableDoubleConsumer;
 import org.apache.ignite.examples.ml.util.SerializableFunction;
 import org.apache.ignite.ml.dataset.feature.extractor.Vectorizer;
@@ -133,11 +134,20 @@ public class Step_11_Parallel_BrutForce_Search {
                 SerializableDoubleConsumer minImpurityDecrease = trainerCV::withMinImpurityDecrease;
                 SerializableDoubleConsumer p = normalizationTrainer::withP;
 
+                // Brute force tries every combination: 1100 here, 27 in an unattended run.
+                boolean unattended = MLExamplesCommonArgs.isUnattended(args);
+
                 ParamGrid paramGrid = new ParamGrid()
                     .withParameterSearchStrategy(new BruteForceStrategy())
-                    .addHyperParam("p", p, new Double[]{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0})
-                    .addHyperParam("maxDeep", maxDeep, new Double[]{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0})
-                    .addHyperParam("minImpurityDecrease", minImpurityDecrease, new Double[]{0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0});
+                    .addHyperParam("p", p, unattended
+                        ? new Double[]{1.0, 2.0, 10.0}
+                        : new Double[]{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0})
+                    .addHyperParam("maxDeep", maxDeep, unattended
+                        ? new Double[]{1.0, 5.0, 10.0}
+                        : new Double[]{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0})
+                    .addHyperParam("minImpurityDecrease", minImpurityDecrease, unattended
+                        ? new Double[]{0.0, 0.5, 1.0}
+                        : new Double[]{0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0});
 
                 SerializableFunction<BinaryClassificationMetricValues, Double> acc = m -> m.accuracy();
 
